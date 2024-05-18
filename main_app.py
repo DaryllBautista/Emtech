@@ -61,7 +61,7 @@ st.markdown(
 
 # Text to display
 made_by_text = "This was made by:"
-submitted_to_text = "Submitted to Engr. Roman Richard."
+submitted_to_text = "Submitted to Engr Roman Richard."
 
 # Display "This was made by:" with a blue background and white text
 st.markdown(f'<div class="highlight"><p class="big-font white-text">{made_by_text}</p></div>', unsafe_allow_html=True)
@@ -140,8 +140,3 @@ if uploaded_file is not None:
 
 # Link to open the app in Colab
 colab_link = "<a href=\"https://colab.research.google.com/github/DaryllBautista/Emtech/blob/main/final_requirement_streamlit.ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
-st.markdown(colab_link, unsafe_allow_html=True)
-
-# Run Streamlit app in the background
-streamlit_command = "streamlit run /usr/local/lib/python3.10/dist-packages/colab_kernel_launcher.py"
-subprocess.Popen(streamlit_command, shell=True)
