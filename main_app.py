@@ -1,142 +1,31 @@
 import streamlit as st
-from PIL import Image
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
 import numpy as np
-import tensorflow as tf
-import subprocess
+from PIL import Image
 
-# Set page layout
-st.set_page_config(
-    page_title="Happy or Sad Classification",
-    page_icon=":smiley:",
-    layout="wide"
-)
+# Load the pre-trained model
+model = load_model('best_modelnew.h5')
 
-st.markdown(
-    """
-    <style>
-        .stApp {
-            background-color: #000000;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+# Streamlit app
+st.title("Happy or Sad Face Predictor")
 
+st.write("Upload an image to predict whether the face is happy or sad.")
 
-# Add a title with a custom font and color
-st.title("Happy or Sad Classification")
-st.markdown(
-    """
-    <style>
-        .big-font {
-            font-size: 24px !important;
-            color: #3498db !important;
-        }
-        .highlight {
-            background-color: #3498db;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-        .result {
-            background-color: #3498db;
-            padding: 10px;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
-        .result-text {
-            color: #ffffff !important;
-        }
-        .white-text {
-            color: #ffffff !important;
-        }
-        .footer-text {
-            color: #ffffff !important;
-            font-style: italic;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
-# Text to display
-made_by_text = "This was made by:"
-submitted_to_text = "Submitted to Engr Roman Richard."
-
-# Display "This was made by:" with a blue background and white text
-st.markdown(f'<div class="highlight"><p class="big-font white-text">{made_by_text}</p></div>', unsafe_allow_html=True)
-
-# Names to display
-names = ["Bautista, Daryll Milton Victor E.", "Tavares, Nicole Ann"]
-
-# Display names with a blue background and white text
-for name in names:
-    st.markdown(f'<p class="big-font white-text">{name}</p>', unsafe_allow_html=True)
-
-
-st.markdown(f'<p class="big-font white-text">{submitted_to_text}</p>', unsafe_allow_html=True)
-
-# File uploader widget to upload an image file
-uploaded_file = st.file_uploader("Choose an image...", type="jpg")
-
-# Function to perform image classification using TensorFlow
-def classify_image(image):
-    try:
-        # Load the trained model (replace with your own model)
-        model = tf.keras.models.load_model("best_modelnew.h5")
-
-        # Compile the model
-        optimizer = tf.optimizers.Adam(learning_rate=0.001)
-        model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
-
-        # Preprocess the image
-        img_array = np.array(image)
-        img_array = tf.image.resize(img_array, (64, 64))  # Resize the image to match model's expected input size
-        img_array = tf.expand_dims(img_array, 0)  # Add a batch dimension
-        img_array = img_array / 255.0  # Normalize the input image
-
-        print("Preprocessed image shape:", img_array.shape)
-
-        # Make predictions
-        predictions = model.predict(img_array)
-
-        print("Raw Predictions:", predictions)
-
-        return predictions
-
-    except Exception as e:
-        st.error(f"Error during image classification: {e}")
-        return None
-
-# Display the uploaded image and perform classification
 if uploaded_file is not None:
-    image = Image.open(uploaded_file)
+    img = Image.open(uploaded_file)
+    st.image(img, caption='Uploaded Image.', use_column_width=True)
+    st.write("")
+    st.write("Classifying...")
 
-    # Add a header with a blue background and white text
-    st.markdown('<div class="highlight"><p class="big-font white-text">Uploaded Image</p></div>', unsafe_allow_html=True)
+    img = img.resize((150, 150))
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)
+    img_array /= 255.0
 
-    # Display the image
-    st.image(image, use_column_width=True)
+    prediction = model.predict(img_array)
+    result = 'happy' if prediction[0][0] > 0.5 else 'sad'
 
-    # Call the classification function
-    predictions = classify_image(image)
-
-    if predictions is not None:
-        # Display the classification results with a blue background
-        st.markdown('<div class="result"><p class="big-font result-text">Prediction Results</p></div>', unsafe_allow_html=True)
-
-        # Print raw predictions for debugging
-        st.write("Raw Predictions:", predictions)
-
-        # Extracting class labels
-        class_labels = ["Sad", "Happy"]
-
-        # Finding the predicted class
-        predicted_class_index = np.argmax(predictions[0])
-        predicted_class_label = class_labels[predicted_class_index]
-
-        # Display the result with white text on a blue background
-        st.markdown(f'The model predicts: <span class="big-font result-text">{predicted_class_label}</span>', unsafe_allow_html=True)
-
-# Link to open the app in Colab
-colab_link = "<a href=\"https://colab.research.google.com/github/DaryllBautista/Emtech/blob/main/final_requirement_streamlit.ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+    st.write(f"The face in the image is **{result}**.")
