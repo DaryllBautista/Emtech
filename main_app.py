@@ -61,7 +61,7 @@ st.markdown(
 
 # Text to display
 made_by_text = "This was made by:"
-submitted_to_text = "Submitted to Engr Roman Richard."
+submitted_to_text = "Submitted to Engr. Roman Richard."
 
 # Display "This was made by:" with a blue background and white text
 st.markdown(f'<div class="highlight"><p class="big-font white-text">{made_by_text}</p></div>', unsafe_allow_html=True)
