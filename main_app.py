@@ -60,7 +60,7 @@ st.markdown(
 
 
 made_by_text = "This was made by:"
-submitted_to_text = "Submitted to Engr. Roman Richard."
+submitted_to_text = "Submitted to: Engr. Roman Richard."
 st.markdown(f'<div class="highlight"><p class="big-font white-text">{made_by_text}</p></div>', unsafe_allow_html=True)
 names = ["Bautista, Daryll Milton Victor E.", "Tavares, Nicole Ann"]
 for name in names:
