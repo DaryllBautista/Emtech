@@ -81,7 +81,7 @@ uploaded_file = st.file_uploader("Choose an image...", type="jpg")
 def classify_image(image):
     try:
         # Load the trained model (replace with your own model)
-        model = tf.keras.models.load_model("best_model.h5")
+        model = tf.keras.models.load_model("best_modelnew.h5")
 
         # Preprocess the image
         img_array = np.array(image)
