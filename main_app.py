@@ -130,10 +130,4 @@ if uploaded_file is not None:
         # Display the result with white text on a blue background
         st.markdown(f'The model predicts: <span class="big-font result-text">{predicted_class}</span>', unsafe_allow_html=True)
 
-# Link to open the app in Colab
-colab_link = "<a href=\"https://colab.research.google.com/github/DaryllBautista/Emtech/blob/main/final_requirement_streamlit.ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
-st.markdown(colab_link, unsafe_allow_html=True)
 
-# Run Streamlit app in the background
-streamlit_command = "streamlit run /usr/local/lib/python3.10/dist-packages/colab_kernel_launcher.py"
-subprocess.Popen(streamlit_command, shell=True)
