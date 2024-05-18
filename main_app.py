@@ -22,7 +22,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
 # Add a title with a custom font and color
 st.title("Happy or Sad Classification")
 st.markdown(
@@ -61,7 +60,7 @@ st.markdown(
 
 # Text to display
 made_by_text = "This was made by:"
-submitted_to_text = "Submitted to Engr. Roman Richard."
+submitted_to_text = "Submitted to Engr Roman Richard."
 
 # Display "This was made by:" with a blue background and white text
 st.markdown(f'<div class="highlight"><p class="big-font white-text">{made_by_text}</p></div>', unsafe_allow_html=True)
@@ -73,7 +72,6 @@ names = ["Bautista, Daryll Milton Victor E.", "Tavares, Nicole Ann"]
 for name in names:
     st.markdown(f'<p class="big-font white-text">{name}</p>', unsafe_allow_html=True)
 
-
 st.markdown(f'<p class="big-font white-text">{submitted_to_text}</p>', unsafe_allow_html=True)
 
 # File uploader widget to upload an image file
@@ -83,11 +81,7 @@ uploaded_file = st.file_uploader("Choose an image...", type="jpg")
 def classify_image(image):
     try:
         # Load the trained model (replace with your own model)
-        model = tf.keras.models.load_model("best_modelnew.h5")
-
-        # Compile the model
-        optimizer = tf.optimizers.Adam(learning_rate=0.001)
-        model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
+        model = tf.keras.models.load_model("best_model.h5")
 
         # Preprocess the image
         img_array = np.array(image)
@@ -95,12 +89,14 @@ def classify_image(image):
         img_array = tf.expand_dims(img_array, 0)  # Add a batch dimension
         img_array = img_array / 255.0  # Normalize the input image
 
-        print("Preprocessed image shape:", img_array.shape)
+        # Debug: Output preprocessed image shape
+        st.write("Preprocessed image shape:", img_array.shape)
 
         # Make predictions
         predictions = model.predict(img_array)
 
-        print("Raw Predictions:", predictions)
+        # Debug: Output raw predictions
+        st.write("Raw Predictions:", predictions)
 
         return predictions
 
@@ -125,18 +121,14 @@ if uploaded_file is not None:
         # Display the classification results with a blue background
         st.markdown('<div class="result"><p class="big-font result-text">Prediction Results</p></div>', unsafe_allow_html=True)
 
-        # Print raw predictions for debugging
-        st.write("Raw Predictions:", predictions)
-
         # Extracting class labels
         class_labels = ["Sad", "Happy"]
 
         # Finding the predicted class
-        predicted_class_index = np.argmax(predictions[0])
-        predicted_class_label = class_labels[predicted_class_index]
+        predicted_class = "Happy" if predictions[0][0] >= 0.5 else "Sad"
 
         # Display the result with white text on a blue background
-        st.markdown(f'The model predicts: <span class="big-font result-text">{predicted_class_label}</span>', unsafe_allow_html=True)
+        st.markdown(f'The model predicts: <span class="big-font result-text">{predicted_class}</span>', unsafe_allow_html=True)
 
 # Link to open the app in Colab
 colab_link = "<a href=\"https://colab.research.google.com/github/DaryllBautista/Emtech/blob/main/final_requirement_streamlit.ipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
