@@ -81,7 +81,7 @@ uploaded_file = st.file_uploader("Choose an image...", type="jpg")
 def classify_image(image):
     try:
         # Load the trained model (replace with your own model)
-        model = tf.keras.models.load_model("best_modelnew.h5")
+        model = tf.keras.models.load_model("best_model.h5")
 
         # Preprocess the image
         img_array = np.array(image)
@@ -89,12 +89,14 @@ def classify_image(image):
         img_array = tf.expand_dims(img_array, 0)  # Add a batch dimension
         img_array = img_array / 255.0  # Normalize the input image
 
-        print("Preprocessed image shape:", img_array.shape)
+        # Debug: Output preprocessed image shape
+        st.write("Preprocessed image shape:", img_array.shape)
 
         # Make predictions
         predictions = model.predict(img_array)
 
-        print("Raw Predictions:", predictions)
+        # Debug: Output raw predictions
+        st.write("Raw Predictions:", predictions)
 
         return predictions
 
@@ -118,9 +120,6 @@ if uploaded_file is not None:
     if predictions is not None:
         # Display the classification results with a blue background
         st.markdown('<div class="result"><p class="big-font result-text">Prediction Results</p></div>', unsafe_allow_html=True)
-
-        # Print raw predictions for debugging
-        st.write("Raw Predictions:", predictions)
 
         # Extracting class labels
         class_labels = ["Sad", "Happy"]
